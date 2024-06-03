@@ -1,39 +1,40 @@
 import React, { useState } from 'react';
-import './Form.scss';
 
-const Form = ({ handleApiCall }) => {
-  const [formData, setFormData] = useState({
-    method: 'GET',
-    url: 'https://pokeapi.co/api/v2/pokemon',
-  });
+function Form({ handleFormSubmit }) {
+  const [url, setUrl] = useState('');
+  const [method, setMethod] = useState('GET');
+  const [body, setBody] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleApiCall(formData);
+    const request = { url, method, body: body ? JSON.parse(body) : null };
+    handleFormSubmit(request);
   };
 
   return (
-    <>
-      <form onSubmit={handleSubmit}>
+    <form onSubmit={handleSubmit}>
+      <label>
+        URL:
+        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
+      </label>
+      <label>
+        Method:
+        <select value={method} onChange={(e) => setMethod(e.target.value)}>
+          <option value="GET">GET</option>
+          <option value="POST">POST</option>
+          <option value="PUT">PUT</option>
+          <option value="DELETE">DELETE</option>
+        </select>
+      </label>
+      {(method === 'POST' || method === 'PUT') && (
         <label>
-          <span>URL: </span>
-          <input
-            name="url"
-            type="text"
-            value={formData.url}
-            onChange={(e) => setFormData({ ...formData, url: e.target.value })}
-          />
-          <button type="submit">GO!</button>
+          Body:
+          <textarea value={body} onChange={(e) => setBody(e.target.value)} />
         </label>
-        <label className="methods">
-          <span id="get">GET</span>
-          <span id="post">POST</span>
-          <span id="put">PUT</span>
-          <span id="delete">DELETE</span>
-        </label>
-      </form>
-    </>
+      )}
+      <button type="submit">Go</button>
+    </form>
   );
-};
+}
 
 export default Form;

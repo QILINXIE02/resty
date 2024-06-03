@@ -1,26 +1,37 @@
-$backgroundColor: #efefef;
-$radius: 40%;
-
-form {
-  display: inline-block;
-  margin: auto;
-  width: 200px;
+.Form {
+  margin-bottom: 20px;
 
   label {
-    display: flex;
-    margin: 1rem 0;
+    display: block;
+    margin-bottom: 10px;
+  }
 
-    &.methods {
-      span {
-        cursor: pointer;
-        margin-right: 1rem;
-        padding: .25rem .5rem;
-        background: #ccc;
+  input[type="text"] {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+  }
 
-        &:hover, &.active {
-          background: #fff;
-        }
-      }
+  .methods {
+    span {
+      margin-right: 10px;
+      cursor: pointer;
     }
+
+    .active {
+      font-weight: bold;
+    }
+  }
+
+  button[type="submit"] {
+    padding: 8px 20px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+
+  button[type="submit"]:hover {
+    background-color: #0056b3;
   }
 }

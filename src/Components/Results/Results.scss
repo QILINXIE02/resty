@@ -1,10 +1,10 @@
-/* Results component styles */
-section {
+.Results {
   margin-top: 20px;
-}
 
-pre {
-  background-color: #f4f4f4;
-  padding: 20px;
-  border-radius: 4px;
+  pre {
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 4px;
+    overflow-x: auto;
+  }
 }
