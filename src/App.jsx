@@ -1,4 +1,7 @@
 import React, { useState } from 'react';
+import './App.scss';
+import Header from './Components/Header';
+import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
 
@@ -22,11 +25,13 @@ function App() {
   };
 
   return (
-    <div>
+    <div className="App">
+      <Header />
       <h1>RESTy Application</h1>
       <Form handleFormSubmit={handleFormSubmit} />
       <Results loading={loading} response={response} />
-    </div>
+        <Footer />
+        </div>
   );
 }
 

@@ -23,6 +23,7 @@ function Form({ handleFormSubmit }) {
           <option value="GET">GET</option>
           <option value="POST">POST</option>
           <option value="PUT">PUT</option>
+          <option value="PATCH">PATCH</option>
           <option value="DELETE">DELETE</option>
         </select>
       </label>
@@ -32,7 +33,7 @@ function Form({ handleFormSubmit }) {
           <textarea value={body} onChange={(e) => setBody(e.target.value)} />
         </label>
       )}
-      <button type="submit">Go</button>
+      <button type="submit">Go!</button>
     </form>
   );
 }
