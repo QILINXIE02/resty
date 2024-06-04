@@ -1,38 +1,47 @@
+// src/Components/Form/index.jsx
 import React, { useState } from 'react';
 import './Form.scss';
 
-const Form = ({ updateRequestParams }) => {
-  const [url, setUrl] = useState('');
-  const [method, setMethod] = useState('GET');
-  const [body, setBody] = useState('');
+const Form = ({ handleApiCall }) => {
+  const [formData, setFormData] = useState({
+    url: '',
+    method: 'GET',
+    body: '',
+  });
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prevData) => ({ ...prevData, [name]: value }));
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    updateRequestParams({ url, method, body });
+    console.log('Form submitted with data:', formData);
+    handleApiCall(formData);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
         URL:
-        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
+        <input type="text" name="url" value={formData.url} onChange={handleChange} />
       </label>
       <label>
         Method:
-        <select value={method} onChange={(e) => setMethod(e.target.value)}>
+        <select name="method" value={formData.method} onChange={handleChange}>
           <option value="GET">GET</option>
           <option value="POST">POST</option>
           <option value="PUT">PUT</option>
           <option value="DELETE">DELETE</option>
         </select>
       </label>
-      {method !== 'GET' && (
+      {formData.method !== 'GET' && (
         <label>
           Body:
-          <textarea value={body} onChange={(e) => setBody(e.target.value)} />
+          <textarea name="body" value={formData.body} onChange={handleChange} />
         </label>
       )}
-      <button type="submit">Go!</button>
+      <button type="submit">Go</button>
     </form>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import '@testing-library/jest-dom/extend-expect';
-import App from './App';
+import App from '../src/App';
 import { rest } from 'msw';
 import { setupServer } from 'msw/node';
 
@@ -15,13 +15,17 @@ beforeAll(() => server.listen());
 afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
-test('renders without crashing and submits form', async () => {
+test('App fetches and displays data correctly and updates history', async () => {
   render(<App />);
 
   fireEvent.change(screen.getByLabelText(/URL/i), { target: { value: 'http://example.com' } });
   fireEvent.change(screen.getByLabelText(/Method/i), { target: { value: 'GET' } });
   fireEvent.click(screen.getByText(/Go/i));
 
-  await waitFor(() => expect(screen.getByText(/Results/i)).toBeInTheDocument());
-  expect(screen.getByText(/Hello World/i)).toBeInTheDocument();
+  await waitFor(() => expect(screen.getByText(/Results/)).toBeInTheDocument());
+  expect(screen.getByText(/message/)).toBeInTheDocument();
+  expect(screen.getByText(/Hello World/)).toBeInTheDocument();
+
+  expect(screen.getByText(/GET/i)).toBeInTheDocument();
+  expect(screen.getByText(/http:\/\/example.com/i)).toBeInTheDocument();
 });

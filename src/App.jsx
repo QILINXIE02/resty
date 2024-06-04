@@ -1,56 +1,78 @@
-import React, { useState, useEffect } from 'react';
+import React, { useReducer } from 'react';
+import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
+import History from './Components/History';
 import './App.scss';
-import axios from 'axios';
+
+const initialState = {
+  loading: false,
+  results: null,
+  history: [],
+  error: null,
+};
+
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'API_REQUEST':
+      return { ...state, loading: true, error: null };
+    case 'API_SUCCESS':
+      return { 
+        ...state, 
+        loading: false, 
+        results: action.payload, 
+        history: [...state.history, action.history] 
+      };
+    case 'API_FAILURE':
+      return { ...state, loading: false, error: action.error };
+    default:
+      return state;
+  }
+};
 
 const App = () => {
-  const [requestParams, setRequestParams] = useState({});
-  const [data, setData] = useState(null);
-  const [loading, setLoading] = useState(false);
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  const handleApiCall = async () => {
-    setLoading(true);
+  const handleApiCall = async (requestParams) => {
+    dispatch({ type: 'API_REQUEST' });
+    console.log('Making API call with params:', requestParams);
+
     try {
       const response = await axios({
-        method: requestParams.method,
         url: requestParams.url,
+        method: requestParams.method,
         data: requestParams.body,
       });
-      setData({
-        headers: response.headers,
+
+      const historyEntry = {
+        url: requestParams.url,
+        method: requestParams.method,
         results: response.data,
-      });
+      };
+
+      dispatch({ type: 'API_SUCCESS', payload: response.data, history: historyEntry });
     } catch (error) {
-      console.error(error);
-      setData({
-        headers: {},
-        results: { error: 'Error fetching data' },
-      });
-    } finally {
-      setLoading(false);
+      console.error('API Error:', error);
+      dispatch({ type: 'API_FAILURE', error: error.message });
     }
-  };
-
-  useEffect(() => {
-    if (requestParams.url) {
-      handleApiCall();
-    }
-  }, [requestParams]);
-
-  const updateRequestParams = (params) => {
-    setRequestParams(params);
   };
 
   return (
-    <React.Fragment>
+    <div className="App">
       <Header />
-      <Form updateRequestParams={updateRequestParams} />
-      {loading ? <p>Loading...</p> : <Results data={data} />}
+      <main>
+        <Form handleApiCall={handleApiCall} />
+        {state.loading && <div>Loading...</div>}
+        {state.error && <div className="error">{state.error}</div>}
+        {state.results && <Results data={state.results} />}
+      </main>
+      <aside>
+        <History history={state.history} />
+      </aside>
       <Footer />
-    </React.Fragment>
+    </div>
   );
 };
 
