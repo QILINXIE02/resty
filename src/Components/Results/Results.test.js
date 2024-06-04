@@ -1,18 +1,16 @@
+// src/Components/Results/Results.test.js
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom/extend-expect';
+import '@testing-library/jest-dom';
 import Results from './index';
 
-test('Displays loading when loading is true', () => {
-  render(<Results loading={true} response={null} />);
-  expect(screen.getByText(/Loading/i)).toBeInTheDocument();
+test('renders Results component with no data', () => {
+  render(<Results data={null} />);
+  expect(screen.getByText(/No data yet/i)).toBeInTheDocument();
 });
 
-test('Displays results when response is given', () => {
-  const response = {
-    headers: { 'Content-Type': 'application/json' },
-    data: { message: 'Hello World' }
-  };
-  render(<Results loading={false} response={response} />);
-  expect(screen.getByTestId('results')).toBeInTheDocument();
+test('renders Results component with data', () => {
+  const data = { message: 'This is a test' };
+  render(<Results data={data} />);
+  expect(screen.getByText(/This is a test/i)).toBeInTheDocument();
 });

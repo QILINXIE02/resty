@@ -1,25 +1,24 @@
+// src/App.jsx
 import React, { useState } from 'react';
-import './App.scss';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
+import './App.scss';
 
-function App() {
-  const [request, setRequest] = useState({});
-  const [response, setResponse] = useState(null);
+const App = () => {
+  const [requestParams, setRequestParams] = useState({});
+  const [data, setData] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = (req) => {
-    setRequest(req);
+  const handleApiCall = async (params) => {
     setLoading(true);
+    setRequestParams(params);
 
+    // Simulate an API call with fake data for now
     setTimeout(() => {
-      const fakeResponse = {
-        headers: { 'Content-Type': 'application/json' },
-        data: { message: 'Hello World' }
-      };
-      setResponse(fakeResponse);
+      const fakeData = { message: 'This is a fake API response' };
+      setData(fakeData);
       setLoading(false);
     }, 1000);
   };
@@ -27,12 +26,13 @@ function App() {
   return (
     <div className="App">
       <Header />
-      <h1>RESTy Application</h1>
-      <Form handleFormSubmit={handleFormSubmit} />
-      <Results loading={loading} response={response} />
-        <Footer />
-        </div>
+      <main>
+        <Form handleApiCall={handleApiCall} />
+        {loading ? <div>Loading...</div> : <Results data={data} />}
+      </main>
+      <Footer />
+    </div>
   );
-}
+};
 
 export default App;
