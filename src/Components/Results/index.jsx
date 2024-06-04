@@ -1,22 +1,24 @@
 import React from 'react';
+import JSONPretty from 'react-json-pretty';
+import 'react-json-pretty/themes/monikai.css';
+import './Results.scss';
 
-function Results({ loading, response }) {
-  if (loading) {
-    return <div>Loading...</div>;
-  }
-
-  if (!response) {
-    return null;
-  }
+const Results = ({ data }) => {
+  if (!data) return null;
 
   return (
-    <div>
-      <h2>Response Headers</h2>
-      <pre>{JSON.stringify(response.headers, null, 2)}</pre>
-      <h2>Response Data</h2>
-      <pre data-testid="results">{JSON.stringify(response.data, null, 2)}</pre>
-    </div>
+    <section className="Results">
+      <h2>Results</h2>
+      <div>
+        <h3>Headers:</h3>
+        <JSONPretty data={data.headers}></JSONPretty>
+      </div>
+      <div>
+        <h3>Results:</h3>
+        <JSONPretty data={data.results}></JSONPretty>
+      </div>
+    </section>
   );
-}
+};
 
 export default Results;

@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
+import './Form.scss';
 
-function Form({ handleFormSubmit }) {
+const Form = ({ updateRequestParams }) => {
   const [url, setUrl] = useState('');
   const [method, setMethod] = useState('GET');
   const [body, setBody] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    const request = { url, method, body: body ? JSON.parse(body) : null };
-    handleFormSubmit(request);
+    updateRequestParams({ url, method, body });
   };
 
   return (
@@ -23,11 +23,10 @@ function Form({ handleFormSubmit }) {
           <option value="GET">GET</option>
           <option value="POST">POST</option>
           <option value="PUT">PUT</option>
-          <option value="PATCH">PATCH</option>
           <option value="DELETE">DELETE</option>
         </select>
       </label>
-      {(method === 'POST' || method === 'PUT') && (
+      {method !== 'GET' && (
         <label>
           Body:
           <textarea value={body} onChange={(e) => setBody(e.target.value)} />
@@ -36,6 +35,6 @@ function Form({ handleFormSubmit }) {
       <button type="submit">Go!</button>
     </form>
   );
-}
+};
 
 export default Form;

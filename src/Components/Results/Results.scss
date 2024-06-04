@@ -1,10 +1,13 @@
 .Results {
-  margin-top: 20px;
+  margin: 2em;
+  padding: 1em;
+  border: 1px solid #ddd;
+
+  h3 {
+    margin-top: 0;
+  }
 
   pre {
-    background-color: #f4f4f4;
-    padding: 20px;
-    border-radius: 4px;
-    overflow-x: auto;
+    text-align: left;
   }
 }
