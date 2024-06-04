@@ -7,6 +7,8 @@
 ### GET with pokemon URL Localhost:
 ![alt text](img/localhost.png)
 
-# Day 2: State
+# Day 2: State draft
 Localhost: 
-![alt text](image.png)
+![alt text](img/local-draft.png)
+
+polish: ![alt text](img/render-state.png)
