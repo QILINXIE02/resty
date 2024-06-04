@@ -1,50 +1,79 @@
-import React from 'react';
-
-import './App.scss';
-
-// Let's talk about using index.js and some other name in the component folder.
-// There's pros and cons for each way of doing this...
-// OFFICIALLY, we have chosen to use the Airbnb style guide naming convention. 
-// Why is this source of truth beneficial when spread across a global organization?
+import React, { useReducer } from 'react';
+import axios from 'axios';
 import Header from './Components/Header';
 import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
+import History from './Components/History';
+import './App.scss';
 
-class App extends React.Component {
+const initialState = {
+  loading: false,
+  results: null,
+  resultHistory: [], 
+  error: null,
+};
 
-  constructor(props) {
-    super(props);
-    this.state = {
-      data: null,
-      requestParams: {},
-    };
+const reducer = (state, action) => {
+  switch (action.type) {
+    case 'API_REQUEST':
+      return { ...state, loading: true, error: null };
+    case 'API_SUCCESS':
+      return { 
+        ...state, 
+        loading: false, 
+        results: action.payload,
+        resultHistory: [...state.resultHistory, action.history],
+      };
+    case 'API_FAILURE':
+      return { ...state, loading: false, error: action.error };
+    default:
+      return state;
   }
+};
 
-  callApi = (requestParams) => {
-    // mock output
-    const data = {
-      count: 2,
-      results: [
-        {name: 'fake thing 1', url: 'http://fakethings.com/1'},
-        {name: 'fake thing 2', url: 'http://fakethings.com/2'},
-      ],
-    };
-    this.setState({data, requestParams});
-  }
+const App = () => {
+  const [state, dispatch] = useReducer(reducer, initialState);
 
-  render() {
-    return (
-      <React.Fragment>
-        <Header />
-        <div>Request Method: {this.state.requestParams.method}</div>
-        <div>URL: {this.state.requestParams.url}</div>
-        <Form handleApiCall={this.callApi} />
-        <Results data={this.state.data} />
-        <Footer />
-      </React.Fragment>
-    );
-  }
-}
+  const handleApiCall = async (requestParams) => {
+    dispatch({ type: 'API_REQUEST' });
+    console.log('Making API call with params:', requestParams);
+
+    try {
+      const response = await axios({
+        url: requestParams.url,
+        method: requestParams.method,
+        data: requestParams.body,
+      });
+
+      const historyEntry = {
+        url: requestParams.url,
+        method: requestParams.method,
+        results: response.data,
+      };
+
+      dispatch({ type: 'API_SUCCESS', payload: response.data, history: historyEntry });
+    } catch (error) {
+      console.error('API Error:', error);
+      dispatch({ type: 'API_FAILURE', error: error.message });
+    }
+  };
+
+  return (
+    <div className="App">
+      <Header />
+      <main>
+        <Form handleApiCall={handleApiCall} />
+        {state.loading && <div>Loading...</div>}
+        {state.error && <div className="error">{state.error}</div>}
+        {state.results && <Results data={state.results} />}
+      </main>
+      <aside>
+        <History history={state.resultHistory} /> 
+      </aside>
+      <Footer />
+    </div>
+  );
+};
 
 export default App;
