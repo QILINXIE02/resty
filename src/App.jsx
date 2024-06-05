@@ -5,12 +5,12 @@ import Footer from './Components/Footer';
 import Form from './Components/Form';
 import Results from './Components/Results';
 import History from './Components/History';
-import './App.scss';
+import './App.scss'; // Import SCSS file
 
 const initialState = {
   loading: false,
   results: null,
-  resultHistory: [], 
+  resultHistory: [], // Renamed history to resultHistory
   error: null,
 };
 
@@ -23,7 +23,7 @@ const reducer = (state, action) => {
         ...state, 
         loading: false, 
         results: action.payload,
-        resultHistory: [...state.resultHistory, action.history],
+        resultHistory: [...state.resultHistory, action.history], // Store results in a separate history
       };
     case 'API_FAILURE':
       return { ...state, loading: false, error: action.error };
@@ -69,7 +69,7 @@ const App = () => {
         {state.results && <Results data={state.results} />}
       </main>
       <aside>
-        <History history={state.resultHistory} /> 
+        <History history={state.resultHistory} />
       </aside>
       <Footer />
     </div>
