@@ -1,61 +1,27 @@
 import React from 'react';
+import { describe, it, expect, beforeEach } from 'vitest'; // Import directly from vitest
 import { render, screen, fireEvent } from '@testing-library/react';
-import { rest } from 'msw';
-import { server } from '../setupTests'; // Import the MSW server
-import App from '../App';
+import Counter from './Counter.jsx';
 
-// Add PUT and DELETE request handlers
-server.use(
-  rest.put('http://localhost:3001/posts/:id', (req, res, ctx) => {
-    const { id } = req.params;
-    const { title } = req.body;
+describe('Counter component', () => {
+  let currentCount;
+  let incrementButton;
 
-    if (!title) {
-      return res(ctx.status(400), ctx.json({ error: 'Title is required' }));
-    }
+  beforeEach(() => {
+    render(<Counter />);
+    currentCount = screen.getByTestId('currentCount');
+    incrementButton = screen.getByTestId('Increment');
+  });
 
-    return res(ctx.json({ id, title }));
-  }),
+  it('renders initial count as 0', () => {
+    expect(currentCount).toHaveTextContent('0');
+  });
 
-  rest.delete('http://localhost:3001/posts/:id', (req, res, ctx) => {
-    const { id } = req.params;
+  it('increments the count when the increment button is clicked', () => {
+    fireEvent.click(incrementButton);
+    expect(currentCount).toHaveTextContent('1');
 
-    // Your deletion logic here
-
-    return res(ctx.status(200));
-  })
-);
-
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
-
-test('handles PUT request', async () => {
-  render(<App />);
-
-  const urlInput = screen.getByLabelText(/url:/i);
-  const methodSelect = screen.getByLabelText(/method:/i);
-  const bodyTextarea = screen.getByLabelText(/body:/i);
-  const goButton = screen.getByText(/send request/i);
-
-  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts/1' } });
-  fireEvent.change(methodSelect, { target: { value: 'PUT' } });
-  fireEvent.change(bodyTextarea, { target: { value: JSON.stringify({ title: 'New Title' }) } });
-  fireEvent.click(goButton);
-
-  expect(await screen.findByText(/new title/i)).toBeInTheDocument();
-});
-
-test('handles DELETE request', async () => {
-  render(<App />);
-
-  const urlInput = screen.getByLabelText(/url:/i);
-  const methodSelect = screen.getByLabelText(/method:/i);
-  const goButton = screen.getByText(/send request/i);
-
-  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts/1' } });
-  fireEvent.change(methodSelect, { target: { value: 'DELETE' } });
-  fireEvent.click(goButton);
-
-  expect(await screen.findByText(/delete success/i)).toBeInTheDocument();
+    fireEvent.click(incrementButton);
+    expect(currentCount).toHaveTextContent('2');
+  });
 });

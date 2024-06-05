@@ -18,6 +18,8 @@ polish: ![alt text](img/render-state.png)
 2. stretch: REST all work
 3. make the website prettier
 
+polish: ![alt text](img/day3.png)
+
 
 ### Mock site testing: 
 1. Install JSON Server:
