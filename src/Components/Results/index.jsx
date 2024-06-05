@@ -1,13 +1,12 @@
-// src/Components/Results/index.jsx
 import React from 'react';
-import './Results.scss';
-import ReactJson from 'react-json-pretty';
+import ReactJson from 'react-json-view';
 
 const Results = ({ data }) => {
   return (
-    <section>
-      {data ? <ReactJson data={data} /> : <div>No data yet</div>}
-    </section>
+    <div className="results">
+      <h2>Results</h2>
+      {data ? <ReactJson src={data} theme="summerfruit:inverted" /> : <p>No data yet</p>}
+    </div>
   );
 };
 

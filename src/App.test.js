@@ -1,11 +1,13 @@
 import React from 'react';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { rest } from 'msw';
-import { server } from '../setupTests'; // Import the MSW server
-import App from '../App';
+import { setupServer } from 'msw/node';
+import App from './App'; 
 
-// Add PUT and DELETE request handlers
-server.use(
+const server = setupServer(
+  rest.get('http://localhost:3001/posts', (req, res, ctx) => {
+    return res(ctx.json({ message: 'Hello, World!' }));
+  }),
   rest.put('http://localhost:3001/posts/:id', (req, res, ctx) => {
     const { id } = req.params;
     const { title } = req.body;
@@ -16,13 +18,9 @@ server.use(
 
     return res(ctx.json({ id, title }));
   }),
-
   rest.delete('http://localhost:3001/posts/:id', (req, res, ctx) => {
     const { id } = req.params;
-
-    // Your deletion logic here
-
-    return res(ctx.status(200));
+    return res(ctx.status(200), ctx.json({ message: 'Delete success' }));
   })
 );
 
