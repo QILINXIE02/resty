@@ -36,4 +36,5 @@ terminal install ![alt text](img/db.png)
 
 #### Delete: ![alt text](img/delete.png) and ![alt text](img/delete-get.png)
 
-
+## Credit
+- CHATGPT helped with implemention of the tests for this project! 

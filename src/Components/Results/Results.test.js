@@ -1,7 +1,6 @@
-// src/Components/Results/Results.test.js
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import '@testing-library/jest-dom';
+import '@testing-library/jest-dom/extend-expect';
 import Results from './index';
 
 test('renders Results component with no data', () => {

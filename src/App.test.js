@@ -1,27 +1,59 @@
 import React from 'react';
-import { describe, it, expect, beforeEach } from 'vitest'; // Import directly from vitest
 import { render, screen, fireEvent } from '@testing-library/react';
-import Counter from './Counter.jsx';
+import { rest } from 'msw';
+import { setupServer } from 'msw/node';
+import App from './App'; 
 
-describe('Counter component', () => {
-  let currentCount;
-  let incrementButton;
+const server = setupServer(
+  rest.get('http://localhost:3001/posts', (req, res, ctx) => {
+    return res(ctx.json({ message: 'Hello, World!' }));
+  }),
+  rest.put('http://localhost:3001/posts/:id', (req, res, ctx) => {
+    const { id } = req.params;
+    const { title } = req.body;
 
-  beforeEach(() => {
-    render(<Counter />);
-    currentCount = screen.getByTestId('currentCount');
-    incrementButton = screen.getByTestId('Increment');
-  });
+    if (!title) {
+      return res(ctx.status(400), ctx.json({ error: 'Title is required' }));
+    }
 
-  it('renders initial count as 0', () => {
-    expect(currentCount).toHaveTextContent('0');
-  });
+    return res(ctx.json({ id, title }));
+  }),
+  rest.delete('http://localhost:3001/posts/:id', (req, res, ctx) => {
+    const { id } = req.params;
+    return res(ctx.status(200), ctx.json({ message: 'Delete success' }));
+  })
+);
 
-  it('increments the count when the increment button is clicked', () => {
-    fireEvent.click(incrementButton);
-    expect(currentCount).toHaveTextContent('1');
+beforeAll(() => server.listen());
+afterEach(() => server.resetHandlers());
+afterAll(() => server.close());
 
-    fireEvent.click(incrementButton);
-    expect(currentCount).toHaveTextContent('2');
-  });
+test('handles PUT request', async () => {
+  render(<App />);
+
+  const urlInput = screen.getByLabelText(/url:/i);
+  const methodSelect = screen.getByLabelText(/method:/i);
+  const bodyTextarea = screen.getByLabelText(/body:/i);
+  const goButton = screen.getByText(/send request/i);
+
+  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts/1' } });
+  fireEvent.change(methodSelect, { target: { value: 'PUT' } });
+  fireEvent.change(bodyTextarea, { target: { value: JSON.stringify({ title: 'New Title' }) } });
+  fireEvent.click(goButton);
+
+  expect(await screen.findByText(/new title/i)).toBeInTheDocument();
+});
+
+test('handles DELETE request', async () => {
+  render(<App />);
+
+  const urlInput = screen.getByLabelText(/url:/i);
+  const methodSelect = screen.getByLabelText(/method:/i);
+  const goButton = screen.getByText(/send request/i);
+
+  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts/1' } });
+  fireEvent.change(methodSelect, { target: { value: 'DELETE' } });
+  fireEvent.click(goButton);
+
+  expect(await screen.findByText(/delete success/i)).toBeInTheDocument();
 });

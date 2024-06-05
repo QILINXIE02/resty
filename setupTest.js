@@ -1,13 +1,13 @@
-import { setupServer } from 'msw/node';
-import { rest } from 'msw';
-import '@testing-library/jest-dom/extend-expect';
+import { expect, afterEach } from 'vitest';
+import { cleanup } from '@testing-library/react';
+import * as matchers from "@testing-library/jest-dom/matchers";
+import '@testing-library/jest-dom/vitest'
 
-const server = setupServer(
-  rest.get('http://localhost:3001/posts', (req, res, ctx) => {
-    return res(ctx.json({ message: 'Hello, World!' }));
-  })
-);
+expect.extend(matchers);
 
-beforeAll(() => server.listen());
-afterEach(() => server.resetHandlers());
-afterAll(() => server.close());
+afterEach(() => {
+
+  cleanup();
+
+});
+
