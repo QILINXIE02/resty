@@ -1,24 +1,33 @@
-// src/Components/Form/index.jsx
 import React, { useState } from 'react';
-import './Form.scss';
 
 const Form = ({ handleApiCall }) => {
-  const [url, setUrl] = useState('');
   const [method, setMethod] = useState('GET');
+  const [url, setUrl] = useState('');
+  const [body, setBody] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    handleApiCall({ url, method });
+    let requestBody = null;
+    if (method !== 'GET' && method !== 'DELETE') {
+      try {
+        requestBody = JSON.parse(body);
+      } catch (error) {
+        alert('Invalid JSON body');
+        return;
+      }
+    }
+    const requestParams = { method, url, body: requestBody };
+    handleApiCall(requestParams);
   };
 
   return (
     <form onSubmit={handleSubmit}>
       <label>
-        URL:
-        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} />
+        <span>URL:</span>
+        <input type="text" value={url} onChange={(e) => setUrl(e.target.value)} required />
       </label>
       <label>
-        Method:
+        <span>Method:</span>
         <select value={method} onChange={(e) => setMethod(e.target.value)}>
           <option value="GET">GET</option>
           <option value="POST">POST</option>
@@ -26,7 +35,13 @@ const Form = ({ handleApiCall }) => {
           <option value="DELETE">DELETE</option>
         </select>
       </label>
-      <button type="submit">Go!</button>
+      {(method === 'POST' || method === 'PUT') && (
+        <label>
+          <span>Body:</span>
+          <textarea value={body} onChange={(e) => setBody(e.target.value)} />
+        </label>
+      )}
+      <button type="submit">Send Request</button>
     </form>
   );
 };

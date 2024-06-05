@@ -3,7 +3,7 @@ import { rest } from 'msw';
 import '@testing-library/jest-dom/extend-expect';
 
 const server = setupServer(
-  rest.get('http://example.com', (req, res, ctx) => {
+  rest.get('http://localhost:3001/posts', (req, res, ctx) => {
     return res(ctx.json({ message: 'Hello, World!' }));
   })
 );
