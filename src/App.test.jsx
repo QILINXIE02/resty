@@ -3,7 +3,7 @@ import { describe, it, expect, beforeAll, afterEach, afterAll } from 'vitest';
 import { render, screen, fireEvent } from '@testing-library/react';
 import { http, HttpResponse } from 'msw';
 import { setupServer } from 'msw/node';
-import App from './App'; 
+import App from './App';
 
 // Mock server setup
 const server = setupServer(
@@ -26,11 +26,12 @@ afterEach(() => server.resetHandlers());
 afterAll(() => server.close());
 
 // Sample return data
-const getReturn = [ { name: 'John' }, { name: 'Cathy' } ];
+const getReturn = [{ name: 'John' }, { name: 'Cathy' }];
 const postReturn = { id: 1, name: 'John' };
 const putReturn = { id: 1, name: 'Zach' };
 const deleteReturn = {};
 
+//get is passing
 describe('App', () => {
   it('should do a get api call', async () => {
     render(<App />);
@@ -57,14 +58,16 @@ describe('App', () => {
     render(<App />);
 
     const urlInput = screen.getByTestId('url-input');
-    const postInput = screen.getByTestId('post-input');
+    const methodInput = screen.getByTestId('method-input');
+    const postInput = screen.getByTestId('post-method-option');
     const submitButton = screen.getByTestId('fetch-api-button');
 
     let method = 'post';
     let url = '/clothes';
 
     fireEvent.change(urlInput, { target: { value: url } });
-    fireEvent.click(postInput, { target: { value: method } });
+    fireEvent.change(methodInput, { target: { value: method } });
+    fireEvent.click(postInput);
     fireEvent.click(submitButton);
 
     await screen.findByTestId('json-display');
@@ -78,14 +81,16 @@ describe('App', () => {
     render(<App />);
 
     const urlInput = screen.getByTestId('url-input');
-    const putInput = screen.getByTestId('put-input');
+    const methodInput = screen.getByTestId('method-input');
+    const putInput = screen.getByTestId('put-method-option');
     const submitButton = screen.getByTestId('fetch-api-button');
 
     let method = 'put';
     let url = '/clothes/1';
 
     fireEvent.change(urlInput, { target: { value: url } });
-    fireEvent.click(putInput, { target: { value: method } });
+    fireEvent.change(methodInput, { target: { value: method } });
+    fireEvent.click(putInput);
     fireEvent.click(submitButton);
 
     await screen.findByTestId('json-display');
@@ -99,14 +104,16 @@ describe('App', () => {
     render(<App />);
 
     const urlInput = screen.getByTestId('url-input');
-    const deleteInput = screen.getByTestId('delete-input');
+    const methodInput = screen.getByTestId('method-input');
+    const deleteInput = screen.getByTestId('delete-method-option');
     const submitButton = screen.getByTestId('fetch-api-button');
 
     let method = 'delete';
     let url = '/clothes/1';
 
     fireEvent.change(urlInput, { target: { value: url } });
-    fireEvent.click(deleteInput, { target: { value: method } });
+    fireEvent.change(methodInput, { target: { value: method } });
+    fireEvent.click(deleteInput);
     fireEvent.click(submitButton);
 
     await screen.findByTestId('json-display');
