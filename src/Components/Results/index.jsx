@@ -1,11 +1,12 @@
 import React from 'react';
-import ReactJson from 'react-json-view';
+import ReactJsonPretty from 'react-json-pretty';
+import 'react-json-pretty/themes/monikai.css';
 
 const Results = ({ data }) => {
   return (
     <div className="results">
       <h2>Results</h2>
-      {data ? <ReactJson src={data} theme="summerfruit:inverted" /> : <p>No data yet</p>}
+      {data ? <ReactJsonPretty data={data} /> : <p>No data yet</p>}
     </div>
   );
 };

@@ -5,8 +5,8 @@ import History from './index';
 
 test('renders history items', () => {
   const history = [
-    { method: 'GET', url: 'http://example.com', results: { message: 'Hello World' } },
-    { method: 'POST', url: 'http://example.com', results: { message: 'Posted' } }
+    { method: 'GET', url: 'https://auth-api-gf43.onrender.com/api/v1/clothes/', results: { message: 'Hello World' } },
+    { method: 'POST', url: 'https://auth-api-gf43.onrender.com/api/v1/clothes/', results: { message: 'Posted' } }
   ];
 
   render(<History history={history} />);

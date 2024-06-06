@@ -5,10 +5,10 @@ import { setupServer } from 'msw/node';
 import App from './App'; 
 
 const server = setupServer(
-  rest.get('http://localhost:3001/posts', (req, res, ctx) => {
+  rest.get('https://auth-api-gf43.onrender.com/api/v1/clothes/:id', (req, res, ctx) => {
     return res(ctx.json({ message: 'Hello, World!' }));
   }),
-  rest.put('http://localhost:3001/posts/:id', (req, res, ctx) => {
+  rest.put('https://auth-api-gf43.onrender.com/api/v1/clothes/:id', (req, res, ctx) => {
     const { id } = req.params;
     const { title } = req.body;
 
@@ -18,7 +18,7 @@ const server = setupServer(
 
     return res(ctx.json({ id, title }));
   }),
-  rest.delete('http://localhost:3001/posts/:id', (req, res, ctx) => {
+  rest.delete('https://auth-api-gf43.onrender.com/api/v1/clothes/:id', (req, res, ctx) => {
     const { id } = req.params;
     return res(ctx.status(200), ctx.json({ message: 'Delete success' }));
   })
@@ -36,7 +36,7 @@ test('handles PUT request', async () => {
   const bodyTextarea = screen.getByLabelText(/body:/i);
   const goButton = screen.getByText(/send request/i);
 
-  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts/1' } });
+  fireEvent.change(urlInput, { target: { value: 'https://auth-api-gf43.onrender.com/api/v1/clothes/1' } });
   fireEvent.change(methodSelect, { target: { value: 'PUT' } });
   fireEvent.change(bodyTextarea, { target: { value: JSON.stringify({ title: 'New Title' }) } });
   fireEvent.click(goButton);
@@ -51,7 +51,7 @@ test('handles DELETE request', async () => {
   const methodSelect = screen.getByLabelText(/method:/i);
   const goButton = screen.getByText(/send request/i);
 
-  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts/1' } });
+  fireEvent.change(urlInput, { target: { value: 'https://auth-api-gf43.onrender.com/api/v1/clothes//1' } });
   fireEvent.change(methodSelect, { target: { value: 'DELETE' } });
   fireEvent.click(goButton);
 
@@ -65,7 +65,7 @@ test('displays results from history on click', async () => {
   const methodSelect = screen.getByLabelText(/method:/i);
   const goButton = screen.getByText(/send request/i);
 
-  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts' } });
+  fireEvent.change(urlInput, { target: { value: 'https://auth-api-gf43.onrender.com/api/v1/clothes/' } });
   fireEvent.change(methodSelect, { target: { value: 'GET' } });
   fireEvent.click(goButton);
 

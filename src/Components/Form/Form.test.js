@@ -6,29 +6,24 @@ test('renders form and handles user input and submission', () => {
   const handleApiCall = jest.fn();
   render(<Form handleApiCall={handleApiCall} />);
 
-  // Input URL
   const urlInput = screen.getByLabelText(/url:/i);
-  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts' } });
-  expect(urlInput.value).toBe('http://localhost:3001/posts');
+  fireEvent.change(urlInput, { target: { value: 'https://auth-api-gf43.onrender.com/api/v1/clothes/' } });
+  expect(urlInput.value).toBe('https://auth-api-gf43.onrender.com/api/v1/clothes/');
 
-  // Select method POST
   const methodSelect = screen.getByLabelText(/method:/i);
   fireEvent.change(methodSelect, { target: { value: 'POST' } });
   expect(methodSelect.value).toBe('POST');
 
-  // Input body
   const bodyTextarea = screen.getByLabelText(/body:/i);
   fireEvent.change(bodyTextarea, { target: { value: '{"title": "New Post"}' } });
   expect(bodyTextarea.value).toBe('{"title": "New Post"}');
 
-  // Submit form
   const submitButton = screen.getByText(/send request/i);
   fireEvent.click(submitButton);
 
-  // Verify handleApiCall is called with correct parameters
   expect(handleApiCall).toHaveBeenCalledWith({
     method: 'POST',
-    url: 'http://localhost:3001/posts',
+    url: 'https://auth-api-gf43.onrender.com/api/v1/clothes/',
     body: { title: 'New Post' },
   });
 });
@@ -40,7 +35,7 @@ test('alerts on invalid JSON body', () => {
 
   // Input URL
   const urlInput = screen.getByLabelText(/url:/i);
-  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts' } });
+  fireEvent.change(urlInput, { target: { value: 'https://auth-api-gf43.onrender.com/api/v1/clothes/' } });
 
   // Select method POST
   const methodSelect = screen.getByLabelText(/method:/i);
