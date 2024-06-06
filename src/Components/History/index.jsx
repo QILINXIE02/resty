@@ -1,4 +1,3 @@
-// src/Components/History/index.jsx
 import React from 'react';
 import './History.scss';
 

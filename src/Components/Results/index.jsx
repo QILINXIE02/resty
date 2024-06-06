@@ -6,7 +6,10 @@ const Results = ({ data }) => {
   return (
     <div className="results">
       <h2>Results</h2>
-      {data ? <ReactJsonPretty data={data} /> : <p>No data yet</p>}
+      {data ? 
+      <div data-testid="json-display"><ReactJsonPretty data={data} /></div>: 
+      <p>No data yet</p>
+      }
     </div>
   );
 };
