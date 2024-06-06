@@ -7,4 +7,3 @@ test('renders footer text', () => {
   const footerElement = screen.getByText(/© 2024 RESTy Inc./i);
   expect(footerElement).toBeInTheDocument();
 });
-

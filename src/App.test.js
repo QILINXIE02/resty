@@ -41,7 +41,7 @@ test('handles PUT request', async () => {
   fireEvent.change(bodyTextarea, { target: { value: JSON.stringify({ title: 'New Title' }) } });
   fireEvent.click(goButton);
 
-  expect(await screen.findByText(/new title/i)).toBeInTheDocument();
+  expect(await screen.findByText(/New Title/i)).toBeInTheDocument();
 });
 
 test('handles DELETE request', async () => {
@@ -55,5 +55,24 @@ test('handles DELETE request', async () => {
   fireEvent.change(methodSelect, { target: { value: 'DELETE' } });
   fireEvent.click(goButton);
 
-  expect(await screen.findByText(/delete success/i)).toBeInTheDocument();
+  expect(await screen.findByText(/Delete success/i)).toBeInTheDocument();
+});
+
+test('displays results from history on click', async () => {
+  render(<App />);
+
+  const urlInput = screen.getByLabelText(/url:/i);
+  const methodSelect = screen.getByLabelText(/method:/i);
+  const goButton = screen.getByText(/send request/i);
+
+  fireEvent.change(urlInput, { target: { value: 'http://localhost:3001/posts' } });
+  fireEvent.change(methodSelect, { target: { value: 'GET' } });
+  fireEvent.click(goButton);
+
+  expect(await screen.findByText(/Hello, World!/i)).toBeInTheDocument();
+
+  const historyButton = screen.getByText(/get http:\/\/localhost:3001\/posts/i);
+  fireEvent.click(historyButton);
+
+  expect(await screen.findByText(/Hello, World!/i)).toBeInTheDocument();
 });

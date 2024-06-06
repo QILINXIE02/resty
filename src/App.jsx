@@ -1,3 +1,4 @@
+// src/App.jsx
 import React, { useReducer } from 'react';
 import axios from 'axios';
 import Header from './Components/Header';
@@ -27,6 +28,8 @@ const reducer = (state, action) => {
       };
     case 'API_FAILURE':
       return { ...state, loading: false, error: action.error };
+    case 'SHOW_HISTORY_ITEM':
+      return { ...state, results: action.payload };
     default:
       return state;
   }
@@ -59,6 +62,10 @@ const App = () => {
     }
   };
 
+  const handleHistoryItemClick = (entry) => {
+    dispatch({ type: 'SHOW_HISTORY_ITEM', payload: entry.results });
+  };
+
   return (
     <div className="App">
       <Header />
@@ -69,7 +76,7 @@ const App = () => {
         {state.results && <Results data={state.results} />}
       </main>
       <aside>
-        <History history={state.resultHistory} />
+        <History history={state.resultHistory} onHistoryItemClick={handleHistoryItemClick} />
       </aside>
       <Footer />
     </div>

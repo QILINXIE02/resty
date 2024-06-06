@@ -36,5 +36,12 @@ terminal install ![alt text](img/db.png)
 
 #### Delete: ![alt text](img/delete.png) and ![alt text](img/delete-get.png)
 
+### Day 4: 
+use API render site to do REST: ![alt text](img/phase4-history.png)
+
+![alt text](img/console.png)
+
+
+
 ## Credit
 - CHATGPT helped with implemention of the tests for this project! 
